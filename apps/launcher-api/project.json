@@ -1,0 +1,35 @@
+{
+  "name": "launcher-api",
+  "projectType": "application",
+  "sourceRoot": "apps/launcher-api",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet build GameLauncher.Api/GameLauncher.Api.csproj --configuration Release",
+        "cwd": "apps/launcher-api"
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet run --project GameLauncher.Api/GameLauncher.Api.csproj",
+        "cwd": "apps/launcher-api"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet test GameLauncher.Api.Tests/GameLauncher.Api.Tests.csproj",
+        "cwd": "apps/launcher-api"
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet ef migrations add InitialCreate --project GameLauncher.Api/GameLauncher.Api.csproj --startup-project GameLauncher.Api/GameLauncher.Api.csproj",
+        "cwd": "apps/launcher-api"
+      }
+    }
+  }
+}
