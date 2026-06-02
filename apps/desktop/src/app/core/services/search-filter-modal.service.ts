@@ -13,7 +13,7 @@ export class SearchFilterModalService {
   });
 
   readonly tags = signal<string[]>([]);
-  readonly selectedTag = signal<string | null>(null);
+  readonly selectedTags = signal<string[]>([]);
 
   open(): void {
     this.isOpen.set(true);
@@ -26,7 +26,13 @@ export class SearchFilterModalService {
     this.filter.update((f) => ({ ...f, ...patch }));
   }
 
-  applyTagChange(tag: string | null): void {
-    this.selectedTag.update((t) => (tag === null || t === tag ? null : tag));
+  applyTagChange(tag: string): void {
+    this.selectedTags.update((tags) =>
+      tags.includes(tag) ? tags.filter((t) => t !== tag) : [...tags, tag]
+    );
+  }
+
+  clearTags(): void {
+    this.selectedTags.set([]);
   }
 }

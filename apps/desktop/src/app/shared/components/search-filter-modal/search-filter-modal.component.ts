@@ -2,11 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  inject,
   input,
   OnInit,
   output,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
@@ -17,6 +20,7 @@ import {
   faSortAlphaAsc,
 } from '@fortawesome/free-solid-svg-icons';
 import { LibraryFilter, SortField } from '../../../core/models/game.models';
+import { NavService } from '../../../core/services/nav.service';
 
 type FocusSection = 'search' | 'favorites' | 'sort' | 'tags' | 'close';
 
@@ -28,13 +32,16 @@ type FocusSection = 'search' | 'favorites' | 'sort' | 'tags' | 'close';
   imports: [FormsModule, FaIconComponent],
 })
 export class SearchFilterModalComponent implements OnInit {
+  private readonly nav = inject(NavService);
+  private readonly destroyRef = inject(DestroyRef);
+
   readonly isOpen = input<boolean>(false);
   readonly filter = input.required<LibraryFilter>();
   readonly tags = input<string[]>([]);
-  readonly selectedTag = input<string | null>(null);
+  readonly selectedTags = input<string[]>([]);
 
   readonly filterChange = output<Partial<LibraryFilter>>();
-  readonly tagChange = output<string | null>();
+  readonly tagChange = output<string>();
   readonly closed = output<void>();
 
   readonly icons = {
@@ -67,6 +74,51 @@ export class SearchFilterModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.focusedSortIndex.set(this.currentSortIndex());
+
+    this.nav
+      .actionsFor('modal')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((action) => {
+        const sections = this.sections();
+        const section = this.focusedSection();
+        const sIdx = sections.indexOf(section);
+
+        if (action === 'back') {
+          this.onClose();
+          this.nav.setZone('library');
+          return;
+        }
+        if (action === 'up' && sIdx > 0) {
+          this.focusedSection.set(sections[sIdx - 1]);
+        } else if (action === 'down' && sIdx < sections.length - 1) {
+          this.focusedSection.set(sections[sIdx + 1]);
+        } else if (action === 'confirm') {
+          if (section === 'close') {
+            this.onClose();
+            this.nav.setZone('library');
+          } else if (section === 'favorites') this.onFavoritesClick();
+          else if (section === 'sort') {
+            this.onSortClick(this.sortOptions[this.focusedSortIndex()].value);
+          } else if (section === 'tags') {
+            const tag = this.tags()[this.focusedTagIndex()];
+            if (tag) this.onTagClick(tag);
+          }
+        } else if (section === 'sort') {
+          if (action === 'left')
+            this.focusedSortIndex.update((i) => Math.max(0, i - 1));
+          else if (action === 'right')
+            this.focusedSortIndex.update((i) =>
+              Math.min(this.sortOptions.length - 1, i + 1)
+            );
+        } else if (section === 'tags') {
+          if (action === 'left')
+            this.focusedTagIndex.update((i) => Math.max(0, i - 1));
+          else if (action === 'right')
+            this.focusedTagIndex.update((i) =>
+              Math.min(this.tags().length - 1, i + 1)
+            );
+        }
+      });
   }
 
   onSearchInput(value: string): void {
@@ -82,7 +134,7 @@ export class SearchFilterModalComponent implements OnInit {
   }
 
   onTagClick(tag: string): void {
-    this.tagChange.emit(this.selectedTag() === tag ? null : tag);
+    this.tagChange.emit(tag);
   }
 
   onClose(): void {

@@ -1,6 +1,6 @@
 .game-card {
   position: relative;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 3;
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
@@ -9,9 +9,8 @@
   transition: transform var(--transition-md), box-shadow var(--transition-md), border-color var(--transition-md);
 
   &:hover {
-    transform: scale(1.03);
     box-shadow: var(--shadow-lg);
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--color-accent);
   }
 }
 
@@ -21,11 +20,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-slow);
-
-  .game-card:hover & {
-    transform: scale(1.06);
-  }
+  transition: none;
 }
 
 .game-card__cover-placeholder {
@@ -64,12 +59,7 @@
   background-color: var(--color-accent);
   color: #fff;
   font-size: var(--font-size-xl);
-  box-shadow: 0 0 0 6px rgba(108, 99, 255, 0.35);
-  transition: transform var(--transition-fast);
-
-  .game-card:hover & {
-    transform: scale(1.1);
-  }
+  box-shadow: 0 0 0 4px rgba(255, 127, 0, 0.5);
 }
 
 .game-card__bottom {

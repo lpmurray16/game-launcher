@@ -1,36 +1,36 @@
 :root {
-  --color-bg-primary: #0f0f13;
-  --color-bg-secondary: #1a1a24;
-  --color-bg-card: #1e1e2a;
-  --color-bg-card-hover: #25253a;
-  --color-bg-input: #13131c;
-  --color-bg-overlay: rgba(0, 0, 0, 0.6);
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #111118;
+  --color-bg-card: #16161f;
+  --color-bg-card-hover: #1e1e2a;
+  --color-bg-input: #0d0d14;
+  --color-bg-overlay: rgba(0, 0, 0, 0.75);
 
-  --color-border: #2a2a3d;
-  --color-border-focus: #6c63ff;
+  --color-border: #2a2a1a;
+  --color-border-focus: #ff7f00;
 
-  --color-accent: #6c63ff;
-  --color-accent-hover: #7d75ff;
-  --color-accent-muted: rgba(108, 99, 255, 0.15);
+  --color-accent: #ff7f00;
+  --color-accent-hover: #ff9a2e;
+  --color-accent-muted: rgba(255, 127, 0, 0.12);
 
   --color-danger: #e05c5c;
   --color-danger-hover: #f06c6c;
   --color-danger-muted: rgba(224, 92, 92, 0.15);
 
   --color-success: #4caf7d;
-  --color-warning: #e0a450;
+  --color-warning: #e0c050;
 
-  --color-text-primary: #e8e8f0;
-  --color-text-secondary: #8888aa;
-  --color-text-muted: #55556a;
-  --color-text-on-accent: #ffffff;
+  --color-text-primary: #f0e8d0;
+  --color-text-secondary: #a09070;
+  --color-text-muted: #504030;
+  --color-text-on-accent: #0a0a0f;
 
   --color-favorite: #f5c542;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
 
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -39,28 +39,31 @@
   --spacing-xl: 32px;
   --spacing-2xl: 48px;
 
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-md: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 2rem;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  --font-size-xs: 0.6rem;
+  --font-size-sm: 0.7rem;
+  --font-size-md: 0.8rem;
+  --font-size-lg: 0.9rem;
+  --font-size-xl: 1rem;
+  --font-size-2xl: 1.2rem;
+  --font-size-3xl: 1.5rem;
 
   --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  --font-weight-medium: 400;
+  --font-weight-semibold: 400;
+  --font-weight-bold: 400;
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-accent: 0 4px 20px rgba(108, 99, 255, 0.25);
+  --shadow-sm: 0 2px 0 rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 4px 0 rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 6px 0 rgba(0, 0, 0, 0.8);
+  --shadow-accent: 0 0 16px rgba(255, 127, 0, 0.4);
 
-  --transition-fast: 120ms ease;
-  --transition-md: 200ms ease;
-  --transition-slow: 350ms ease;
+  --transition-fast: 0ms;
+  --transition-md: 0ms;
+  --transition-slow: 0ms;
 
   --sidebar-width: 220px;
-  --topbar-height: 64px;
+  --topbar-height: 56px;
 }

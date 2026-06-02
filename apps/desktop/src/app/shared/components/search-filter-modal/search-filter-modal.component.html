@@ -56,7 +56,7 @@
         <label class="modal__label">Tags</label>
         <div class="modal__chips">
           @for (tag of tags(); track tag; let i = $index) {
-          <button class="modal__chip" [class.modal__chip--active]="selectedTag() === tag"
+          <button class="modal__chip" [class.modal__chip--active]="selectedTags().includes(tag)"
             [class.modal__chip--focused]="focusedSection() === 'tags' && focusedTagIndex() === i"
             (click)="onTagClick(tag)">
             {{ tag }}

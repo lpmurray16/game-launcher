@@ -31,10 +31,10 @@
 
       @if (menuOpen()) {
       <div class="game-card__menu">
-        <a class="game-card__menu-item" [routerLink]="['/games/edit', game().id]" (click)="$event.stopPropagation()">
+        <button class="game-card__menu-item" (click)="$event.stopPropagation(); onEdit()">
           <fa-icon [icon]="icons.edit" />
           <span>Edit</span>
-        </a>
+        </button>
         <button class="game-card__menu-item game-card__menu-item--danger"
           (click)="$event.stopPropagation(); onDelete()">
           <fa-icon [icon]="icons.trash" />

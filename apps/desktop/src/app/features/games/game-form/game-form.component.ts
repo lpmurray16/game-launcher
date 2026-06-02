@@ -1,12 +1,18 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   input,
   OnInit,
   output,
   signal,
+  viewChildren,
+  viewChild,
+  ElementRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
   FormGroup,
@@ -25,6 +31,20 @@ import {
   Game,
   UpdateGameRequest,
 } from '../../../core/models/game.models';
+import { NavService } from '../../../core/services/nav.service';
+
+const FIELD_ORDER = [
+  'name',
+  'launchPath',
+  'arguments',
+  'workingDirectory',
+  'coverArtPath',
+  'tags',
+  'isFavorite',
+  'cancel',
+  'save',
+] as const;
+type FormField = (typeof FIELD_ORDER)[number];
 
 @Component({
   selector: 'app-game-form',
@@ -33,8 +53,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, FaIconComponent],
 })
-export class GameFormComponent implements OnInit {
+export class GameFormComponent implements OnInit, AfterViewInit {
   private readonly fb = inject(FormBuilder);
+  private readonly nav = inject(NavService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly game = input<Game | null>(null);
   readonly isSubmitting = input(false);
@@ -50,12 +72,49 @@ export class GameFormComponent implements OnInit {
 
   readonly tagInput = signal('');
   readonly tags = signal<string[]>([]);
+  readonly focusedField = signal<FormField>('name');
 
-  private readonly launchPathPicker?: { nativeElement: HTMLInputElement };
-  private readonly workingDirPicker?: { nativeElement: HTMLInputElement };
+  private fieldEls = new Map<FormField, HTMLElement>();
+  readonly fieldRefs = viewChildren<ElementRef<HTMLElement>>('fieldRef');
+
+  private readonly launchPathPicker =
+    viewChild<ElementRef<HTMLInputElement>>('launchPathPicker');
+  private readonly workingDirPicker =
+    viewChild<ElementRef<HTMLInputElement>>('workingDirPicker');
   private activePickerField: 'launchPath' | 'workingDirectory' | null = null;
 
   form!: FormGroup;
+
+  ngAfterViewInit(): void {
+    this.nav
+      .actionsFor('form')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((action) => {
+        const idx = FIELD_ORDER.indexOf(this.focusedField());
+        if (action === 'up') {
+          const next = FIELD_ORDER[Math.max(0, idx - 1)];
+          this.focusedField.set(next);
+          this.fieldEls.get(next)?.focus();
+        } else if (action === 'down') {
+          const next = FIELD_ORDER[Math.min(FIELD_ORDER.length - 1, idx + 1)];
+          this.focusedField.set(next);
+          this.fieldEls.get(next)?.focus();
+        } else if (action === 'back') {
+          this.onCancel();
+        } else if (action === 'confirm') {
+          const field = this.focusedField();
+          if (field === 'save') this.onSubmit();
+          else if (field === 'cancel') this.onCancel();
+          else if (field === 'isFavorite') {
+            this.form
+              .get('isFavorite')
+              ?.setValue(!this.form.get('isFavorite')?.value);
+          } else {
+            this.fieldEls.get(field)?.focus();
+          }
+        }
+      });
+  }
 
   ngOnInit(): void {
     const existing = this.game();
@@ -132,8 +191,8 @@ export class GameFormComponent implements OnInit {
     this.activePickerField = field;
     const picker =
       field === 'launchPath'
-        ? this.launchPathPicker?.nativeElement
-        : this.workingDirPicker?.nativeElement;
+        ? this.launchPathPicker()?.nativeElement
+        : this.workingDirPicker()?.nativeElement;
     picker?.click();
   }
 

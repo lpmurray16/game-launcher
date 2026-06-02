@@ -1,4 +1,5 @@
 import { inject, Injectable, NgZone, OnDestroy, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 
 export type GamepadAction =
   | 'up'
@@ -10,17 +11,12 @@ export type GamepadAction =
   | 'menu'
   | 'select';
 
-export interface GamepadEvent {
-  action: GamepadAction;
-  seq: number;
-}
-
 @Injectable({ providedIn: 'root' })
 export class GamepadService implements OnDestroy {
   readonly connected = signal(false);
-  readonly lastAction = signal<GamepadAction | null>(null);
-  readonly event = signal<GamepadEvent | null>(null);
-  private seq = 0;
+
+  private readonly _actions = new Subject<GamepadAction>();
+  readonly actions$ = this._actions.asObservable();
 
   private rafId: number | null = null;
   private prevButtons: boolean[] = [];
@@ -40,17 +36,18 @@ export class GamepadService implements OnDestroy {
     window.removeEventListener('gamepadconnected', this.onConnect);
     window.removeEventListener('gamepaddisconnected', this.onDisconnect);
     this.stopLoop();
+    this._actions.complete();
   }
 
   private onConnect = () => {
-    this.connected.set(true);
+    this.zone.run(() => this.connected.set(true));
     this.startLoop();
   };
 
   private onDisconnect = () => {
     const pads = navigator.getGamepads().filter(Boolean);
     if (pads.length === 0) {
-      this.connected.set(false);
+      this.zone.run(() => this.connected.set(false));
       this.stopLoop();
     }
   };
@@ -79,22 +76,17 @@ export class GamepadService implements OnDestroy {
 
     const buttons = gp.buttons.map((b) => b.pressed);
     const prev = this.prevButtons;
-
     const justPressed = (idx: number): boolean => buttons[idx] && !prev[idx];
 
-    // D-pad
     if (justPressed(12)) this.emit('up');
     if (justPressed(13)) this.emit('down');
     if (justPressed(14)) this.emit('left');
     if (justPressed(15)) this.emit('right');
-
-    // Face buttons
     if (justPressed(0)) this.emit('confirm');
     if (justPressed(1)) this.emit('back');
-    if (justPressed(8)) this.emit('select'); // Select/Back
-    if (justPressed(9)) this.emit('menu'); // Start
+    if (justPressed(8)) this.emit('select');
+    if (justPressed(9)) this.emit('menu');
 
-    // Left stick with repeat
     const ax = gp.axes[0] ?? 0;
     const ay = gp.axes[1] ?? 0;
     const now = performance.now();
@@ -119,9 +111,6 @@ export class GamepadService implements OnDestroy {
   }
 
   private emit(action: GamepadAction): void {
-    this.zone.run(() => {
-      this.lastAction.set(action);
-      this.event.set({ action, seq: ++this.seq });
-    });
+    this.zone.run(() => this._actions.next(action));
   }
 }

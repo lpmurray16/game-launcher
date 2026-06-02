@@ -26,7 +26,7 @@
 
     <div class="grid-sizer" title="Resize cards">
       <fa-icon [icon]="icons.grid" class="grid-sizer__icon" />
-      <input class="grid-sizer__slider" type="range" min="140" max="360" step="10" [value]="gridSize()"
+      <input class="grid-sizer__slider" type="range" min="100" max="260" step="10" [value]="gridSize()"
         (input)="onGridSizeChange($any($event.target).value)" />
     </div>
   </div>
@@ -34,7 +34,7 @@
   @if (allTags().length > 0) {
   <div class="library__tags">
     @for (tag of allTags(); track tag) {
-    <button class="tag-chip" [class.tag-chip--active]="selectedTag() === tag" (click)="onTagSelect(tag)">{{ tag
+    <button class="tag-chip" [class.tag-chip--active]="selectedTags().includes(tag)" (click)="onTagSelect(tag)">{{ tag
       }}</button>
     }
   </div>
@@ -49,12 +49,13 @@
     <fa-icon [icon]="icons.gamepad" class="library__empty-icon" />
     <p class="library__empty-title">No games found</p>
     <p class="text-secondary">Add your first game to get started.</p>
-    <a class="btn-primary" routerLink="/games/add">Add Game</a>
+    <button class="btn-primary" (click)="gameFormModal.openAdd()">Add Game</button>
   </div>
   } @else {
   <div class="library__grid" [style.--card-min-width.px]="gridSize()">
     @for (game of filteredGames(); track game.id; let i = $index) {
-    <app-game-card [game]="game" (launched)="onGameLaunched($event)" (deleted)="onGameDeleted($event)" />
+    <app-game-card [game]="game" [class.gamepad-focused]="nav.zone() === 'library' && focusedIndex() === i"
+      (launched)="onGameLaunched($event)" (deleted)="onGameDeleted($event)" />
     }
   </div>
   }

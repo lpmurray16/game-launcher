@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { GameFormModalService } from '../../../core/services/game-form-modal.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   faPlay,
@@ -22,9 +23,10 @@ import { Game } from '../../../core/models/game.models';
   templateUrl: './game-card.component.html',
   styleUrl: './game-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, FaIconComponent],
+  imports: [FaIconComponent],
 })
 export class GameCardComponent {
+  private readonly gameFormModal = inject(GameFormModalService);
   readonly game = input.required<Game>();
   readonly launched = output<string>();
   readonly deleted = output<string>();
@@ -42,6 +44,11 @@ export class GameCardComponent {
 
   onLaunch(): void {
     this.launched.emit(this.game().id);
+  }
+
+  onEdit(): void {
+    this.menuOpen.set(false);
+    this.gameFormModal.openEdit(this.game());
   }
 
   onDelete(): void {

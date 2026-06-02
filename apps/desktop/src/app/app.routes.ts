@@ -9,19 +9,7 @@ export const appRoutes: Route[] = [
         (m) => m.LibraryComponent
       ),
   },
-  {
-    path: 'games/add',
-    loadComponent: () =>
-      import('./features/games/add-game/add-game.component').then(
-        (m) => m.AddGameComponent
-      ),
-  },
-  {
-    path: 'games/edit/:id',
-    loadComponent: () =>
-      import('./features/games/edit-game/edit-game.component').then(
-        (m) => m.EditGameComponent
-      ),
-  },
+  { path: 'games/add', redirectTo: 'library', pathMatch: 'full' },
+  { path: 'games/edit/:id', redirectTo: 'library', pathMatch: 'full' },
   { path: '**', redirectTo: 'library' },
 ];

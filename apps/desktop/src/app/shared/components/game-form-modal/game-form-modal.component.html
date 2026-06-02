@@ -1,0 +1,16 @@
+@if (modalSvc.isOpen()) {
+<div class="gfm-backdrop" (click)="onBackdropClick()">
+  <div class="gfm-modal" (click)="$event.stopPropagation()">
+    <div class="gfm-modal__header">
+      <span class="gfm-modal__title">{{ modalSvc.editingGame() ? 'EDIT GAME' : 'ADD GAME' }}</span>
+    </div>
+    <div class="gfm-modal__body">
+      <app-game-form
+        [game]="modalSvc.editingGame()"
+        [isSubmitting]="isSubmitting()"
+        (submitted)="onSubmit($event)"
+        (cancelled)="onCancel()" />
+    </div>
+  </div>
+</div>
+}

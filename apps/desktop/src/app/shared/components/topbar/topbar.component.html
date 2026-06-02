@@ -1,4 +1,4 @@
-<header class="topbar">
+<header class="topbar" [class.topbar--focused]="nav.zone() === 'topbar'">
   <div class="topbar__brand">
     <fa-icon [icon]="icons.gamepad" class="topbar__brand-icon" />
     <span class="topbar__brand-name">LAUNCHER</span>
@@ -6,19 +6,22 @@
 
   <nav class="topbar__nav">
     <a class="topbar__nav-item" routerLink="/library" routerLinkActive="topbar__nav-item--route-active"
-      [routerLinkActiveOptions]="{ exact: true }">
+      [routerLinkActiveOptions]="{ exact: true }"
+      [class.topbar__nav-item--focused]="nav.zone() === 'topbar' && focusedItem() === 'library'">
       <fa-icon [icon]="icons.gamepad" />
       <span>Library</span>
     </a>
     <a class="topbar__nav-item" routerLink="/library" [queryParams]="{ favorites: true }"
-      routerLinkActive="topbar__nav-item--route-active">
+      routerLinkActive="topbar__nav-item--route-active"
+      [class.topbar__nav-item--focused]="nav.zone() === 'topbar' && focusedItem() === 'favorites'">
       <fa-icon [icon]="icons.heart" />
       <span>Favorites</span>
     </a>
-    <a class="topbar__nav-item" routerLink="/games/add" routerLinkActive="topbar__nav-item--route-active">
+    <button class="topbar__nav-item" (click)="gameFormModal.openAdd()"
+      [class.topbar__nav-item--focused]="nav.zone() === 'topbar' && focusedItem() === 'add'">
       <fa-icon [icon]="icons.plus" />
       <span>Add Game</span>
-    </a>
+    </button>
   </nav>
 
   <div class="topbar__actions">

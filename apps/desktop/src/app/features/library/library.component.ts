@@ -2,12 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
@@ -25,19 +27,15 @@ import { ToastService } from '../../core/services/toast.service';
 import { GameCardComponent } from '../../shared/components/game-card/game-card.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { SearchFilterModalService } from '../../core/services/search-filter-modal.service';
+import { NavService } from '../../core/services/nav.service';
+import { GameFormModalService } from '../../core/services/game-form-modal.service';
 
 @Component({
   selector: 'app-library',
   templateUrl: './library.component.html',
   styleUrl: './library.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormsModule,
-    RouterLink,
-    FaIconComponent,
-    GameCardComponent,
-    SpinnerComponent,
-  ],
+  imports: [FormsModule, FaIconComponent, GameCardComponent, SpinnerComponent],
 })
 export class LibraryComponent implements OnInit {
   private readonly api = inject(GameApiService);
@@ -45,6 +43,11 @@ export class LibraryComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   readonly modalSvc = inject(SearchFilterModalService);
+  readonly nav = inject(NavService);
+  readonly gameFormModal = inject(GameFormModalService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly focusedIndex = signal(0);
 
   readonly icons = {
     search: faSearch,
@@ -56,7 +59,7 @@ export class LibraryComponent implements OnInit {
     play: faPlay,
   };
 
-  readonly gridSize = signal(Number(localStorage.getItem('gridSize') ?? 240));
+  readonly gridSize = signal(Number(localStorage.getItem('gridSize') ?? 160));
 
   readonly heroGame = computed(() => {
     const games = this.allGames();
@@ -77,8 +80,8 @@ export class LibraryComponent implements OnInit {
   get filter() {
     return this.modalSvc.filter;
   }
-  get selectedTag() {
-    return this.modalSvc.selectedTag;
+  get selectedTags() {
+    return this.modalSvc.selectedTags;
   }
 
   readonly allTags = computed(() => {
@@ -90,7 +93,7 @@ export class LibraryComponent implements OnInit {
   readonly filteredGames = computed(() => {
     const games = this.allGames();
     const { search, favoritesOnly, sortField, sortDirection } = this.filter();
-    const tag = this.selectedTag();
+    const tags = this.selectedTags();
 
     let result = games;
 
@@ -98,8 +101,8 @@ export class LibraryComponent implements OnInit {
       result = result.filter((g) => g.isFavorite);
     }
 
-    if (tag) {
-      result = result.filter((g) => g.tags.includes(tag));
+    if (tags.length > 0) {
+      result = result.filter((g) => tags.some((t) => g.tags.includes(t)));
     }
 
     if (search.trim()) {
@@ -136,6 +139,46 @@ export class LibraryComponent implements OnInit {
     effect(() => {
       this.modalSvc.tags.set(this.allTags());
     });
+
+    this.nav
+      .actionsFor('library')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((action) => {
+        if (action === 'select') {
+          this.modalSvc.open();
+          this.nav.setZone('modal');
+          return;
+        }
+        if (action === 'menu') {
+          this.nav.setZone('topbar');
+          return;
+        }
+        const games = this.filteredGames();
+        const len = games.length;
+        if (len === 0) return;
+        const cols = Math.max(
+          1,
+          Math.floor(window.innerWidth / (this.gridSize() + 16))
+        );
+        this.focusedIndex.update((i) => {
+          if (action === 'up') {
+            const next = i - cols;
+            if (next < 0) {
+              this.nav.setZone('topbar');
+              return i;
+            }
+            return next;
+          }
+          if (action === 'down') return Math.min(i + cols, len - 1);
+          if (action === 'left') return Math.max(i - 1, 0);
+          if (action === 'right') return Math.min(i + 1, len - 1);
+          return i;
+        });
+        if (action === 'confirm') {
+          const game = games[this.focusedIndex()];
+          if (game) this.onGameLaunched(game.id);
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -166,7 +209,7 @@ export class LibraryComponent implements OnInit {
     });
   }
 
-  onTagSelect(tag: string | null): void {
+  onTagSelect(tag: string): void {
     this.modalSvc.applyTagChange(tag);
   }
 

@@ -5,6 +5,7 @@
     </main>
 </div>
 <app-toast />
+<app-game-form-modal />
 <app-search-filter-modal [isOpen]="modalSvc.isOpen()" [filter]="modalSvc.filter()" [tags]="modalSvc.tags()"
-    [selectedTag]="modalSvc.selectedTag()" (filterChange)="modalSvc.applyFilterPatch($event)"
+    [selectedTags]="modalSvc.selectedTags()" (filterChange)="modalSvc.applyFilterPatch($event)"
     (tagChange)="modalSvc.applyTagChange($event)" (closed)="modalSvc.close()" />

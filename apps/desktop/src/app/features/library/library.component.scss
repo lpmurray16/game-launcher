@@ -244,10 +244,17 @@
 }
 
 
+.gamepad-focused {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 6px var(--color-accent-muted);
+}
+
 .library__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-min-width, 240px), 1fr));
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg);
   overflow-y: auto;
   flex: 1;
   padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-2xl);
