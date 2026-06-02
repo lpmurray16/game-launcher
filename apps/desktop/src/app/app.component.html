@@ -1,0 +1,10 @@
+<div class="app-shell">
+    <app-topbar />
+    <main class="app-shell__content">
+        <router-outlet />
+    </main>
+</div>
+<app-toast />
+<app-search-filter-modal [isOpen]="modalSvc.isOpen()" [filter]="modalSvc.filter()" [tags]="modalSvc.tags()"
+    [selectedTag]="modalSvc.selectedTag()" (filterChange)="modalSvc.applyFilterPatch($event)"
+    (tagChange)="modalSvc.applyTagChange($event)" (closed)="modalSvc.close()" />

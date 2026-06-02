@@ -1,0 +1,63 @@
+<div class="library">
+
+  @if (heroGame()?.coverArtPath) {
+  <div class="library__bg" [style.background-image]="'url(' + heroGame()!.coverArtPath + ')'"></div>
+  }
+  <div class="library__bg-overlay"></div>
+
+  <div class="library__toolbar">
+    <div class="search-box">
+      <fa-icon [icon]="icons.search" class="search-box__icon" />
+      <input #searchInput class="search-box__input" type="text" placeholder="Search games or tags..."
+        [ngModel]="filter().search" (ngModelChange)="onSearchChange($event)" />
+    </div>
+
+    <button class="btn-icon" [class.btn-icon--active]="filter().favoritesOnly" (click)="onFavoritesToggle()"
+      title="Favorites only">
+      <fa-icon [icon]="icons.heart" />
+    </button>
+
+    <select class="sort-select" [ngModel]="filter().sortField" (ngModelChange)="onSortChange($event)">
+      <option value="name">Name</option>
+      <option value="lastPlayedAt">Last Played</option>
+      <option value="playCount">Play Count</option>
+      <option value="createdAt">Date Added</option>
+    </select>
+
+    <div class="grid-sizer" title="Resize cards">
+      <fa-icon [icon]="icons.grid" class="grid-sizer__icon" />
+      <input class="grid-sizer__slider" type="range" min="140" max="360" step="10" [value]="gridSize()"
+        (input)="onGridSizeChange($any($event.target).value)" />
+    </div>
+  </div>
+
+  @if (allTags().length > 0) {
+  <div class="library__tags">
+    @for (tag of allTags(); track tag) {
+    <button class="tag-chip" [class.tag-chip--active]="selectedTag() === tag" (click)="onTagSelect(tag)">{{ tag
+      }}</button>
+    }
+  </div>
+  }
+
+  @if (isLoading()) {
+  <div class="library__state">
+    <app-spinner size="lg" />
+  </div>
+  } @else if (filteredGames().length === 0) {
+  <div class="library__state">
+    <fa-icon [icon]="icons.gamepad" class="library__empty-icon" />
+    <p class="library__empty-title">No games found</p>
+    <p class="text-secondary">Add your first game to get started.</p>
+    <a class="btn-primary" routerLink="/games/add">Add Game</a>
+  </div>
+  } @else {
+  <div class="library__grid" [style.--card-min-width.px]="gridSize()">
+    @for (game of filteredGames(); track game.id; let i = $index) {
+    <app-game-card [game]="game" (launched)="onGameLaunched($event)" (deleted)="onGameDeleted($event)" />
+    }
+  </div>
+  }
+
+
+</div>

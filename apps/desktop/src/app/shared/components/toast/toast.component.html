@@ -1,0 +1,11 @@
+<div class="toast-container">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div class="toast toast--{{ toast.type }}">
+      <fa-icon [icon]="icons[toast.type]" class="toast__icon" />
+      <span class="toast__message">{{ toast.message }}</span>
+      <button class="toast__close" (click)="toastService.dismiss(toast.id)">
+        <fa-icon [icon]="icons.close" />
+      </button>
+    </div>
+  }
+</div>

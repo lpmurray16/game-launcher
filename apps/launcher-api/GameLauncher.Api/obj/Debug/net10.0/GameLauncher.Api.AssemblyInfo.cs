@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GameLauncher.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1cf0b738cda0d31251e73c43841d7a5f8c46b50a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f837b2a6e8dace71d82ec08ca6dfb7981a5103d")]
 [assembly: System.Reflection.AssemblyProductAttribute("GameLauncher.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GameLauncher.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj": {}
+    "C:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj": {}
   },
   "projects": {
-    "c:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj": {
+    "C:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj",
+        "projectUniqueName": "C:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj",
         "projectName": "GameLauncher.Api",
-        "projectPath": "c:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj",
+        "projectPath": "C:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\GameLauncher.Api.csproj",
         "packagesPath": "C:\\Users\\sk8in\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\obj\\",
+        "outputPath": "C:\\Users\\sk8in\\Desktop\\CodeStuff\\game-launcher\\apps\\launcher-api\\GameLauncher.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sk8in\\AppData\\Roaming\\NuGet\\NuGet.Config"

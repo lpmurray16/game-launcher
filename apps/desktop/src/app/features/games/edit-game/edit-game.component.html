@@ -1,0 +1,12 @@
+<div class="page">
+  <header class="page__header">
+    <h1 class="page__title">Edit Game</h1>
+  </header>
+
+  @if (isLoading()) {
+  <p class="text-secondary">Loading...</p>
+  } @else {
+  <app-game-form [game]="game()" [isSubmitting]="isSubmitting()" (submitted)="onSubmit($event)"
+    (cancelled)="onCancel()" />
+  }
+</div>

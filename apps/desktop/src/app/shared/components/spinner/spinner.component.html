@@ -1,0 +1,12 @@
+<div class="spinner" [class]="'spinner--' + size()">
+  <img
+    class="spinner__gif"
+    [src]="gifPath"
+    alt="Loading..."
+    (error)="gifFailed = true"
+    [class.spinner__gif--hidden]="gifFailed"
+  />
+  @if (gifFailed) {
+    <div class="spinner__ring"></div>
+  }
+</div>

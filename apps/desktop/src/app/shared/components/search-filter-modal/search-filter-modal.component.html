@@ -1,0 +1,79 @@
+<div class="modal-backdrop" [class.modal-backdrop--open]="isOpen()" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal__header">
+      <span class="modal__title">Search &amp; Filter</span>
+      <button class="modal__close" [class.modal__close--focused]="focusedSection() === 'close'" (click)="onClose()"
+        title="Close (B)">
+        <fa-icon [icon]="icons.close" />
+      </button>
+    </div>
+
+    <div class="modal__body">
+
+      <div class="modal__section" [class.modal__section--focused]="focusedSection() === 'search'">
+        <label class="modal__label">
+          <fa-icon [icon]="icons.search" />
+          Search
+        </label>
+        <input class="modal__input" type="text" placeholder="Game name or tag..." [value]="filter().search"
+          (input)="onSearchInput($any($event.target).value)" (focus)="focusedSection.set('search')" />
+      </div>
+
+      <div class="modal__section" [class.modal__section--focused]="focusedSection() === 'favorites'">
+        <label class="modal__label">
+          <fa-icon [icon]="icons.heart" />
+          Favorites only
+        </label>
+        <button class="modal__toggle" [class.modal__toggle--on]="filter().favoritesOnly" (click)="onFavoritesClick()">
+          @if (filter().favoritesOnly) {
+          <fa-icon [icon]="icons.check" />
+          <span>On</span>
+          } @else {
+          <span>Off</span>
+          }
+        </button>
+      </div>
+
+      <div class="modal__section" [class.modal__section--focused]="focusedSection() === 'sort'">
+        <label class="modal__label">
+          <fa-icon [icon]="icons.sort" />
+          Sort by
+        </label>
+        <div class="modal__chips">
+          @for (opt of sortOptions; track opt.value; let i = $index) {
+          <button class="modal__chip" [class.modal__chip--active]="filter().sortField === opt.value"
+            [class.modal__chip--focused]="focusedSection() === 'sort' && focusedSortIndex() === i"
+            (click)="onSortClick(opt.value)">
+            {{ opt.label }}
+          </button>
+          }
+        </div>
+      </div>
+
+      @if (tags().length > 0) {
+      <div class="modal__section" [class.modal__section--focused]="focusedSection() === 'tags'">
+        <label class="modal__label">Tags</label>
+        <div class="modal__chips">
+          @for (tag of tags(); track tag; let i = $index) {
+          <button class="modal__chip" [class.modal__chip--active]="selectedTag() === tag"
+            [class.modal__chip--focused]="focusedSection() === 'tags' && focusedTagIndex() === i"
+            (click)="onTagClick(tag)">
+            {{ tag }}
+          </button>
+          }
+        </div>
+      </div>
+      }
+
+    </div>
+
+    <div class="modal__hints">
+      <span><kbd>↑↓</kbd> Navigate</span>
+      <span><kbd>←→</kbd> Select option</span>
+      <span><kbd>A</kbd> Confirm</span>
+      <span><kbd>B</kbd> Close</span>
+    </div>
+
+  </div>
+</div>

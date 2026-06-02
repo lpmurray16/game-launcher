@@ -1,0 +1,87 @@
+<form class="game-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label class="form-label" for="name">Game Name *</label>
+    <input id="name" class="form-input" type="text" formControlName="name" placeholder="e.g. Hades"
+      [class.form-input--error]="form.get('name')?.invalid && form.get('name')?.touched" />
+    @if (form.get('name')?.invalid && form.get('name')?.touched) {
+    <span class="form-error">Name is required.</span>
+    }
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="launchPath">Launch Path *</label>
+    <div class="input-with-browse">
+      <input id="launchPath" class="form-input" type="text" formControlName="launchPath"
+        placeholder="C:\Games\Hades\Hades.exe"
+        [class.form-input--error]="form.get('launchPath')?.invalid && form.get('launchPath')?.touched" />
+      <button type="button" class="btn-browse" (click)="browseFile('launchPath')">Browse</button>
+      <input #launchPathPicker type="file" class="file-picker-hidden" (change)="onFilePicked($event, 'launchPath')" />
+    </div>
+    <span class="form-hint">Enter the full path manually. Browse provides filename only in browser mode.</span>
+    @if (form.get('launchPath')?.invalid && form.get('launchPath')?.touched) {
+    <span class="form-error">Launch path is required.</span>
+    }
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="arguments">Arguments</label>
+    <input id="arguments" class="form-input" type="text" formControlName="arguments"
+      placeholder="Optional launch arguments" />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="workingDirectory">Working Directory</label>
+    <div class="input-with-browse">
+      <input id="workingDirectory" class="form-input" type="text" formControlName="workingDirectory"
+        placeholder="C:\Games\Hades" />
+      <button type="button" class="btn-browse" (click)="browseFile('workingDirectory')">Browse</button>
+      <input #workingDirPicker type="file" class="file-picker-hidden"
+        (change)="onFilePicked($event, 'workingDirectory')" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="coverArtPath">Cover Art Path</label>
+    <input id="coverArtPath" class="form-input" type="text" formControlName="coverArtPath"
+      placeholder="https://... or C:\Images\hades-cover.jpg" />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Tags</label>
+    <div class="tag-input-row">
+      <input class="form-input" type="text" placeholder="Add a tag..." [value]="tagInput()"
+        (input)="tagInput.set($any($event.target).value)" (keydown)="onTagInputKeydown($event)" />
+      <button type="button" class="btn-icon-sm" (click)="addTag()">
+        <fa-icon [icon]="icons.plus" />
+      </button>
+    </div>
+    @if (tags().length > 0) {
+    <div class="tag-list">
+      @for (tag of tags(); track tag) {
+      <span class="tag">
+        {{ tag }}
+        <button type="button" class="tag__remove" (click)="removeTag(tag)">
+          <fa-icon [icon]="icons.trash" />
+        </button>
+      </span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form-group form-group--inline">
+    <input id="isFavorite" type="checkbox" formControlName="isFavorite" class="form-checkbox" />
+    <label class="form-label" for="isFavorite">Mark as Favorite</label>
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="btn-secondary" (click)="onCancel()">
+      <fa-icon [icon]="icons.cancel" />
+      <span>Cancel</span>
+    </button>
+    <button type="submit" class="btn-primary" [disabled]="form.invalid || isSubmitting()">
+      <fa-icon [icon]="icons.save" />
+      <span>{{ isSubmitting() ? 'Saving...' : 'Save Game' }}</span>
+    </button>
+  </div>
+</form>

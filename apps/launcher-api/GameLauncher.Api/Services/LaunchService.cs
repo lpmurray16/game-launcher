@@ -9,6 +9,8 @@ public class LaunchService(ILogger<LaunchService> logger) : ILaunchService
 
     public Task<LaunchResult> LaunchAsync(Game game)
     {
+        game.LaunchPath = game.LaunchPath.Trim().Trim('"', '\'').Trim();
+
         var validationError = ValidateLaunchPath(game.LaunchPath);
         if (validationError is not null)
         {

@@ -1,0 +1,47 @@
+<article class="game-card" (click)="onLaunch()" (mouseleave)="closeMenu()">
+  @if (game().coverArtPath) {
+  <img [src]="game().coverArtPath" [alt]="game().name" class="game-card__cover-img" />
+  } @else {
+  <div class="game-card__cover-placeholder">
+    <fa-icon [icon]="icons.play" />
+  </div>
+  }
+
+  <div class="game-card__hover-overlay">
+    <div class="game-card__launch-btn">
+      <fa-icon [icon]="icons.play" />
+    </div>
+  </div>
+
+  <div class="game-card__bottom">
+    <div class="game-card__info">
+      @if (game().isFavorite) {
+      <fa-icon [icon]="icons.heart" class="game-card__fav-icon" />
+      }
+      <span class="game-card__name">{{ game().name }}</span>
+      @if (game().playCount > 0) {
+      <span class="game-card__plays">{{ game().playCount }}x</span>
+      }
+    </div>
+
+    <div class="game-card__menu-wrapper">
+      <button class="game-card__menu-btn" (click)="$event.stopPropagation(); toggleMenu()" title="Options">
+        <fa-icon [icon]="icons.ellipsis" />
+      </button>
+
+      @if (menuOpen()) {
+      <div class="game-card__menu">
+        <a class="game-card__menu-item" [routerLink]="['/games/edit', game().id]" (click)="$event.stopPropagation()">
+          <fa-icon [icon]="icons.edit" />
+          <span>Edit</span>
+        </a>
+        <button class="game-card__menu-item game-card__menu-item--danger"
+          (click)="$event.stopPropagation(); onDelete()">
+          <fa-icon [icon]="icons.trash" />
+          <span>Delete</span>
+        </button>
+      </div>
+      }
+    </div>
+  </div>
+</article>

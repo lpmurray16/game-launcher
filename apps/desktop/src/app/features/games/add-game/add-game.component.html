@@ -1,0 +1,7 @@
+<div class="page">
+  <header class="page__header">
+    <h1 class="page__title">Add Game</h1>
+  </header>
+
+  <app-game-form [isSubmitting]="isSubmitting()" (submitted)="onSubmit($event)" (cancelled)="onCancel()" />
+</div>

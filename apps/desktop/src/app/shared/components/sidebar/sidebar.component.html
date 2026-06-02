@@ -1,0 +1,36 @@
+<aside class="sidebar">
+  <div class="sidebar__brand">
+    <fa-icon [icon]="icons.gamepad" class="sidebar__brand-icon" />
+    <span class="sidebar__brand-name">Launcher</span>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a
+      class="sidebar__nav-item"
+      routerLink="/library"
+      routerLinkActive="sidebar__nav-item--active"
+    >
+      <fa-icon [icon]="icons.gamepad" />
+      <span>Library</span>
+    </a>
+
+    <a
+      class="sidebar__nav-item"
+      routerLink="/library"
+      [queryParams]="{ favorites: true }"
+      routerLinkActive="sidebar__nav-item--active"
+    >
+      <fa-icon [icon]="icons.heart" />
+      <span>Favorites</span>
+    </a>
+
+    <a
+      class="sidebar__nav-item"
+      routerLink="/games/add"
+      routerLinkActive="sidebar__nav-item--active"
+    >
+      <fa-icon [icon]="icons.plus" />
+      <span>Add Game</span>
+    </a>
+  </nav>
+</aside>

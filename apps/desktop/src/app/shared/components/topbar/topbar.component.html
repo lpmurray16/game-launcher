@@ -1,0 +1,26 @@
+<header class="topbar">
+  <div class="topbar__brand">
+    <fa-icon [icon]="icons.gamepad" class="topbar__brand-icon" />
+    <span class="topbar__brand-name">LAUNCHER</span>
+  </div>
+
+  <nav class="topbar__nav">
+    <a class="topbar__nav-item" routerLink="/library" routerLinkActive="topbar__nav-item--route-active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <fa-icon [icon]="icons.gamepad" />
+      <span>Library</span>
+    </a>
+    <a class="topbar__nav-item" routerLink="/library" [queryParams]="{ favorites: true }"
+      routerLinkActive="topbar__nav-item--route-active">
+      <fa-icon [icon]="icons.heart" />
+      <span>Favorites</span>
+    </a>
+    <a class="topbar__nav-item" routerLink="/games/add" routerLinkActive="topbar__nav-item--route-active">
+      <fa-icon [icon]="icons.plus" />
+      <span>Add Game</span>
+    </a>
+  </nav>
+
+  <div class="topbar__actions">
+  </div>
+</header>
